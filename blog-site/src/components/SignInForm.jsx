@@ -1,5 +1,8 @@
+<<<<<<< HEAD:blog-site/src/components/SignInForm.jsx
 "use client";
 
+=======
+>>>>>>> 22f6438 (Set up the foundation for development):frontend/src/components/SignInForm.jsx
 import React, { useState } from 'react';
 import TextInput from './TextInput';
 import PasswordInput from './PasswordInput';

@@ -1,60 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ArticleItem from './ArticleItem';
-import ControlPanel from './ControlPanel';
+import Pagination from './Pagination';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const BlogListPage = () => {
-  
-  const articles = [
-    { id: 1, title: 'Title 1', text: 'Text 1', imageUrl: '/favicon.jpg' },
-    { id: 2, title: 'Title 2', text: 'Text 2', imageUrl: '/favicon.jpg' },
-    { id: 3, title: 'Title 3', text: 'Text 3', imageUrl: '/favicon.jpg' },
-    { id: 4, title: 'Title 4', text: 'Text 4', imageUrl: '/favicon.jpg' },
-    { id: 5, title: 'Title 5', text: 'Text 5', imageUrl: '/favicon.jpg' },
-    { id: 6, title: 'Title 6', text: 'Text 6', imageUrl: '/favicon.jpg' },
-    { id: 7, title: 'Title 7', text: 'Text 7', imageUrl: '/favicon.jpg' },
-    { id: 8, title: 'Title 8', text: 'Text 8', imageUrl: '/favicon.jpg' },
-    { id: 9, title: 'Title 9', text: 'Text 9', imageUrl: '/favicon.jpg' },
-    { id: 10, title: 'Title 10', text: 'Text 10', imageUrl: 'https://via.placeholder.com/150' },
-  ];
-  
+  const [currentPage, setCurrentPage] = useState(1); // ページ番号
+  const [articles, setArticles] = useState([]);
+  const [viewMode, setViewMode] = useState('myself'); // 'myself' or 'everyone'
+  const articlesPerPage = 4; // 1ページに表示する記事の数
+
+  // コンポーネントがマウントされる or viewModeが変更された時
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = JSON.parse(sessionStorage.getItem('user'));
+      const userId = user?.id;
+
+      try {
+        const url = new URL('/api/bloglist', window.location.origin);
+        if (viewMode === 'myself') {
+          url.searchParams.append('userId', userId);
+        } else if (viewMode === 'everyone') {
+          url.searchParams.append('all', 'true');
+        }
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setArticles(data.posts);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchData();
+  }, [viewMode]);
+
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
+
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    setCurrentPage(1); // ページをリセット
+  };
+
   return (
-    <div>
-      {/*
-      <ControlPanel
-        showAll={showAll}
-        setShowAll={setShowAll}
-        selectedArticles={selectedArticles}
-        setSelectedArticles={setSelectedArticles}
-        articles={articles}
-        setArticles={setArticles}
-      />
-            <div className="grid grid-cols-1 gap-4">
-        <ArticleItem/>
-      </div>
-      <Pagination/>
-    <ControlPanel/>
-      */}
-   <div className="h-screen bg-black-100 overflow-hidden">
+    <div className="bg-gray-100 md:bg-white min-h-screen">
       <div className="absolute top-20 left-0 right-0 z-10 flex justify-end space-x-4 px-4">
         <PersonIcon className="text-orange-400 self-center" />
-        <button className="bg-transparent text-orange-700 border border-white py-2 px-0 rounded-full hover:bg-white hover:text-black transition duration-300 relative overflow-hidden">
+        <button
+          className={`bg-transparent text-orange-700 border border-white py-2 px-4 rounded-full hover:bg-white hover:text-black transition duration-300 relative overflow-hidden ${viewMode === 'myself' ? 'font-bold' : ''}`}
+          onClick={() => handleViewModeChange('myself')}
+        >
           <span className="relative z-10">myself</span>
         </button>
         <PeopleAltIcon className="text-green-600 self-center" />
-        <button className="bg-transparent text-green-800 border border-white py-2 px-0 rounded-full hover:bg-white hover:text-black transition duration-300 relative overflow-hidden">
+        <button
+          className={`bg-transparent text-green-800 border border-white py-2 px-4 rounded-full hover:bg-white hover:text-black transition duration-300 relative overflow-hidden ${viewMode === 'everyone' ? 'font-bold' : ''}`}
+          onClick={() => handleViewModeChange('everyone')}
+        >
           <span className="relative z-10">everyone</span>
         </button>
       </div>
       <div className="flex items-center justify-center h-screen">
-        <div className="container mx-auto py-20">
-          <ArticleItem />
-        </div>
+        <ArticleItem articles={currentArticles} /> {/* ArticleItemコンポーネントに記事リストを渡す */}
+      </div>
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
       </div>
     </div>
-    </div>
-
   );
 };
 

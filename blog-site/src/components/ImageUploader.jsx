@@ -1,5 +1,8 @@
+<<<<<<< HEAD:blog-site/src/components/ImageUploader.jsx
 "use client";
 
+=======
+>>>>>>> 22f6438 (Set up the foundation for development):frontend/src/components/ImageUploader.jsx
 import React from 'react';
 
 const ImageUploader = () => {

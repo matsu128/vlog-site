@@ -1,5 +1,8 @@
+<<<<<<< HEAD:blog-site/src/components/LoginForm.jsx
 'use client';
 
+=======
+>>>>>>> 22f6438 (Set up the foundation for development):frontend/src/components/LoginForm.jsx
 import React, { useState } from 'react';
 import TextInput from './TextInput';
 import PasswordInput from './PasswordInput';
@@ -37,6 +40,7 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+<<<<<<< HEAD:blog-site/src/components/LoginForm.jsx
       <TextInput
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -48,6 +52,11 @@ const LoginForm = () => {
         placeholder='Password'
       />
       <Button type='submit'>Login</Button>
+=======
+      <TextInput value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+      <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <Button type="submit">Login</Button>
+>>>>>>> 22f6438 (Set up the foundation for development):frontend/src/components/LoginForm.jsx
       {/*
       <Link to="/forgot-password">Forgot Password?</Link>
       */}
