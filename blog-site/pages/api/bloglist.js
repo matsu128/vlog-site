@@ -1,6 +1,5 @@
 // pages/api/bloglist.js
 
-import { getUserPosts, getAllPosts } from '../../src/lib/posts'; // ユーザーの投稿を取得する関数をインポート
 import { disconnect } from '../../src/lib/prisma'; // Prismaの接続を閉じる関数をインポート
 
 export default async function handler(req, res) {
