@@ -1,44 +1,31 @@
-import prisma from '../../src/lib/prisma';
+// pages/api/bloglist.js
 
+import { getUserPosts, getAllPosts } from '../../src/lib/posts'; // ユーザーの投稿を取得する関数をインポート
+import { disconnect } from '../../src/lib/prisma'; // Prismaの接続を閉じる関数をインポート
 
-// ユーザーの投稿を取得する関数
-export async function getUserPosts(userId) {
-  try {
-    // userIdに紐づくユーザーの投稿を取得する
-    const posts = await prisma.post.findMany({
-      where: {
-        user_id: userId,
-      },
-      orderBy: {
-        created_at: 'desc', // 必要に応じて投稿の並び替えを設定する
-      },
-    });
+export default async function handler(req, res) {
+  if (req.method === 'POST') { // post送信の場合
+    const { userId, viewMode } = req.body;
 
-    return posts;
-  } catch (error) {
-    console.error('Error fetching user posts:', error);
-    throw new Error('Failed to fetch user posts');
+    try {
+      let posts;
+      if (viewMode === 'myself') {
+        posts = await getUserPosts(userId); // IDが一致するPostテーブルの情報を取得
+
+      } else if (viewMode === 'everyone') {
+        posts = await getAllPosts(); // 全ての投稿を取得
+      }
+
+      res.status(200).json({ posts });
+
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      res.status(500).json({ error: 'Failed to fetch posts' });
+
+    } finally {
+      await disconnect(); // Prismaの接続を閉じる
+    }
+  } else {
+    res.status(405).end(); // POST以外のメソッドは許可しない
   }
-}
-
-// 全ての投稿を取得する関数
-export async function getAllPosts() {
-  try {
-    // 全ての投稿を取得する
-    const posts = await prisma.post.findMany({
-      orderBy: {
-        created_at: 'desc', // 必要に応じて投稿の並び替えを設定する
-      },
-    });
-
-    return posts;
-  } catch (error) {
-    console.error('Error fetching all posts:', error);
-    throw new Error('Failed to fetch all posts');
-  }
-}
-
-// Prismaの接続を閉じる関数
-export async function disconnect() {
-  await prisma.$disconnect();
 }

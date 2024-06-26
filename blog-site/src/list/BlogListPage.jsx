@@ -13,28 +13,25 @@ const BlogListPage = () => {
   // コンポーネントがマウントされる or viewModeが変更された時
   useEffect(() => {
     const fetchData = async () => {
-      const user = JSON.parse(sessionStorage.getItem('user'));
+      const user = JSON.parse(sessionStorage.getItem('user')); // セッションストレージからユーザー情報を取得
       const userId = user?.id;
 
       try {
         const url = new URL('/api/bloglist', window.location.origin);
-        if (viewMode === 'myself') {
-          url.searchParams.append('userId', userId);
-        } else if (viewMode === 'everyone') {
-          url.searchParams.append('all', 'true');
-        }
 
         const response = await fetch(url.toString(), {
-          method: 'GET',
+          method: 'POST', // POSTメソッドを使用
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({ userId, viewMode }), // ボディにuserIdとviewModeをJSON形式で含める
         });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
+       // responseをarticlesにset
         const data = await response.json();
         setArticles(data.posts);
       } catch (error) {
@@ -54,6 +51,7 @@ const BlogListPage = () => {
     setCurrentPage(pageNumber);
   };
 
+  // myselfかeveryoneを押下時に表示切り替え
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     setCurrentPage(1); // ページをリセット
