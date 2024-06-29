@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <>
       <div>
-        <title>Welcome to myBlog</title>
         <LoginPage />
       </div>
     </>

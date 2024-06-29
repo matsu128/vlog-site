@@ -6,15 +6,17 @@ export default async function handler(req, res) {
   switch (method) {
     case 'POST':
       // 新規記事作成
-      const { title, text, image, userId } = req.body;
+      const { title, content, image, userId } = req.body;
       try {
         const post = await prisma.post.create({
           data: {
             title,
-            text,
-            image,
-            user_id: userId,
-          },
+            content,
+            imageUrl: image || null,
+            author: {
+              connect: { id: userId }
+            }
+          }
         });
         res.status(201).json(post);
       } catch (error) {
@@ -24,11 +26,11 @@ export default async function handler(req, res) {
       break;
 
     case 'PUT':
-      // 記事更新
+      // 記事更新(idとid以外のデータ)
       const { id, ...updateData } = req.body;
       try {
         const post = await prisma.post.update({
-          where: { id: parseInt(id, 10) },
+          where: { id: id},
           data: updateData,
         });
         res.status(200).json(post);

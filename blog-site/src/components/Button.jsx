@@ -1,14 +1,15 @@
-<<<<<<< HEAD:blog-site/src/components/Button.jsx
-"use client";
-
-=======
->>>>>>> 22f6438 (Set up the foundation for development):frontend/src/components/Button.jsx
 import React from 'react';
 
-const Button = ({ type = 'button', children, ...props }) => {
+const Button = ({ text, onClick }) => {
   return (
-    <button type={type} {...props}>
-      {children}
+    <button
+      onClick={onClick}
+      className="mt-4 px-6 py-3 bg-gradient-to-r bg-orange-400 bg-orange-400 bg-orange-400 text-white rounded-full shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-600"
+      style={{
+        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      {text}
     </button>
   );
 };

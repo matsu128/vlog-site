@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ArticleItem from './ArticleItem';
 import Pagination from './Pagination';
+import Button from '../components/Button';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
@@ -15,18 +16,25 @@ const BlogListPage = () => {
   // コンポーネントがマウントされた時またはviewModeが変更された時に記事を取得する
   useEffect(() => {
     const fetchData = async () => {
-      const user = JSON.parse(sessionStorage.getItem('user')); // セッションストレージからユーザー情報を取得
-      const userId = user?.id;
+
+      // TODO 仮でuserIDをset
+      sessionStorage.setItem('userId', 2);
+      if (!parseInt(sessionStorage.getItem('userId'))) {
+        router.push('/login'); // userIdがnullならログインページに遷移
+        return;
+      }
 
       try {
-        const url = new URL('/api/bloglist', window.location.origin); // APIエンドポイントを設定
-
-        const response = await fetch(url.toString(), {
-          method: 'POST', // POSTメソッドを使用
+        const userId = parseInt(sessionStorage.getItem('userId'));
+        const response = await fetch('/api/bloglist', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId, viewMode }), // リクエストボディにuserIdとviewModeをJSON形式で含める
+          body: JSON.stringify({
+            userId,
+            viewMode 
+          }),
         });
 
         if (!response.ok) {
@@ -68,13 +76,13 @@ const BlogListPage = () => {
 
   // 新規投稿ボタン押下時の処理
   const handleNewPost = () => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    sessionStorage.setItem('userId', user?.id); // ユーザーIDをセッションストレージに保存
-    router.push('/BlogFormPage'); // 新規投稿ページへ遷移
+    const userId = parseInt(sessionStorage.getItem('userId'));
+    sessionStorage.setItem('userId', userId); // ユーザーIDをセッションストレージに保存
+    router.push('/blogform'); // 新規投稿ページへ遷移
   };
 
   return (
-    <div className="bg-gray-100 md:bg-white min-h-screen">
+    <div className="bg-gray-100 md:bg-white min-h-screen relative">
       {/* ビューの切り替えボタン */}
       <div className="absolute top-20 left-0 right-0 z-10 flex justify-end space-x-4 px-4">
         <PersonIcon className="text-orange-400 self-center" />
@@ -104,9 +112,9 @@ const BlogListPage = () => {
       </div>
 
       {/* 新規投稿ボタン */}
-      <button onClick={handleNewPost} className="absolute bottom-10 right-10 bg-blue-500 text-white py-2 px-4 rounded-full">
-        新規投稿
-      </button>
+      <div className="absolute bottom-20 right-5">
+        <Button text="New Post" onClick={handleNewPost} />
+      </div>
     </div>
   );
 };
