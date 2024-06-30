@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +18,6 @@ const BlogFormPage = () => {
 
   // ページ読み込み時にセッションストレージからデータを読み込む
   useEffect(() => {
-
     // userIdが存在しない
     if (!parseInt(sessionStorage.getItem('userId'))) {
       router.push('/login'); // userIdがnullならログインページに遷移
@@ -172,7 +172,9 @@ const BlogFormPage = () => {
 
         <div className="flex justify-between mt-4">
           {/* 戻るボタン */}
-          <Button text="back" onClick={() => router.push('/bloglist')} />
+          <div onClick={() => router.push('/bloglist')}>
+            <Button text="back" />
+          </div>
 
           {/* メッセージ表示領域 */}
           <div className="flex-grow text-center">
@@ -182,7 +184,9 @@ const BlogFormPage = () => {
           </div>
 
           {/* 登録ボタン */}
-          <Button text="post" onClick={handleSubmit} />
+          <div onClick={handleSubmit}>
+            <Button text="post" />
+          </div>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ArticleItem from './ArticleItem';
@@ -19,13 +20,18 @@ const BlogListPage = () => {
 
       // TODO 仮でuserIDをset
       sessionStorage.setItem('userId', 2);
+      // const accessToken = sessionStorage.getItem('accessToken');
+      // if (!accessToken) {
       if (!parseInt(sessionStorage.getItem('userId'))) {
         router.push('/login'); // userIdがnullならログインページに遷移
         return;
       }
 
       try {
+        // const decodedToken = jwtDecode(accessToken);
+        // const userId = decodedToken.userId;
         const userId = parseInt(sessionStorage.getItem('userId'));
+
         const response = await fetch('/api/bloglist', {
           method: 'POST',
           headers: {
@@ -70,15 +76,21 @@ const BlogListPage = () => {
 
   // 記事選択時の処理
   const handleArticleSelect = (article) => {
-    sessionStorage.setItem('selectedPost', JSON.stringify(article)); // 選択した記事をセッションストレージに保存
-    router.push('/BlogDetailPage'); // 記事詳細ページへ遷移
+  // 選択した記事の情報をセッションストレージに保存
+  sessionStorage.setItem('selectedPostImage', article.image);
+  sessionStorage.setItem('selectedPostTitle', article.title);
+  sessionStorage.setItem('selectedPostContent', article.content);
+  sessionStorage.setItem('viewMode', viewMode);
+
+  console.log('list.jsxの記事押下時のviewMode = ' + viewMode);
+
+  // 詳細ページに遷移
+  router.push('/blogdetail');
   };
 
   // 新規投稿ボタン押下時の処理
   const handleNewPost = () => {
-    const userId = parseInt(sessionStorage.getItem('userId'));
-    sessionStorage.setItem('userId', userId); // ユーザーIDをセッションストレージに保存
-    router.push('/blogform'); // 新規投稿ページへ遷移
+    router.push('/blogform'); // 新規投稿ページに遷移
   };
 
   return (
@@ -103,7 +115,8 @@ const BlogListPage = () => {
       
       {/* 記事リスト */}
       <div className="flex items-center justify-center h-screen">
-        <ArticleItem articles={currentArticles} onSelect={handleArticleSelect} /> {/* 記事選択時の処理を追加 */}
+      <ArticleItem articles={currentArticles} onSelect={handleArticleSelect} />
+
       </div>
       
       {/* ページネーション */}
@@ -113,7 +126,9 @@ const BlogListPage = () => {
 
       {/* 新規投稿ボタン */}
       <div className="absolute bottom-20 right-5">
-        <Button text="New Post" onClick={handleNewPost} />
+        <div onClick={handleNewPost}>
+          <Button text="New Post" />
+        </div>
       </div>
     </div>
   );
