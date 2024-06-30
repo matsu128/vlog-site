@@ -1,10 +1,9 @@
-import React from 'react';
 import LoginPage from '../src/login/LoginPage';
 
 const login = () => {
   return (
     <>
-      <title>Login</title>
+      <title>Login | BlogSite</title>
       <LoginPage />
     </>
   );
