@@ -1,6 +1,15 @@
+'use client';
+
 import React, { useState } from 'react';
+import Button from '@/components/Button';
 
 const LoginPage = () => {
+  const [account, setAccount] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+
+  const loginSubmitHandler = async (e) => {};
+
   return (
     <>
       <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
@@ -29,8 +38,9 @@ const LoginPage = () => {
                 type='email'
                 autoComplete='email'
                 required
-                className='block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6 placeholder:italic placeholder:text-slate-400'
+                className='block w-full p-1.5 rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6 placeholder:italic placeholder:text-slate-400'
                 placeholder='myblog@example.com'
+                onChange={(e) => setAccount(e.target.value)}
               />
             </div>
           </div>
@@ -55,19 +65,16 @@ const LoginPage = () => {
                 id='password'
                 name='password'
                 type='password'
-                autoComplete='current-password'
+                autoComplete='password'
                 required
-                className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                className='block w-full p-1.5 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
           <div>
-            <button
-              type='submit'
-              className='flex w-full justify-center mt-5 rounded-md bg-orange-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-              Login
-            </button>
+            <Button text={'Login'} />
           </div>
 
           <p className='mt-10 text-center text-sm text-black'>
