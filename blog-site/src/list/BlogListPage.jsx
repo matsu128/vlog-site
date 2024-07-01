@@ -77,9 +77,9 @@ const BlogListPage = () => {
   // 記事選択時の処理
   const handleArticleSelect = (article) => {
   // 選択した記事の情報をセッションストレージに保存
-  sessionStorage.setItem('selectedPostImage', article.image);
-  sessionStorage.setItem('selectedPostTitle', article.title);
-  sessionStorage.setItem('selectedPostContent', article.content);
+  sessionStorage.setItem('image', article.image);
+  sessionStorage.setItem('title', article.title);
+  sessionStorage.setItem('content', article.content);
   sessionStorage.setItem('viewMode', viewMode);
 
   console.log('list.jsxの記事押下時のviewMode = ' + viewMode);
