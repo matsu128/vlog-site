@@ -82,8 +82,6 @@ const BlogListPage = () => {
   sessionStorage.setItem('content', article.content);
   sessionStorage.setItem('viewMode', viewMode);
 
-  console.log('list.jsxの記事押下時のviewMode = ' + viewMode);
-
   // 詳細ページに遷移
   router.push('/blogdetail');
   };

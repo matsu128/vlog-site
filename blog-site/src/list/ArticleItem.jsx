@@ -5,8 +5,15 @@ const ArticleItem = ({ articles, onSelect }) => {
   const router = useRouter();
 
   const handleArticleClick = (article) => {
-    // 記事選択時の処理を呼び出す
     onSelect(article);
+  };
+
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return `${text.substring(0, maxLength)}...`;
+    } else {
+      return text;
+    }
   };
 
   return (
@@ -30,7 +37,7 @@ const ArticleItem = ({ articles, onSelect }) => {
                   </div>
                   <div className="py-6 p-2 md:w-1/2 w-full h-1/2 md:h-full flex items-center order-2">
                     <div className="mx-auto text-center">
-                      <h1 className="sm:text-3xl text-2xl font-medium text-gray-900 mb-2">{article.title}</h1>
+                      <h1 className="sm:text-3xl text-2xl font-medium text-gray-900 mb-2">{truncateText(article.title, 7)}</h1>
                       <div className="w-full"><h2>{article.text}</h2></div>
                     </div>
                   </div>
@@ -39,7 +46,7 @@ const ArticleItem = ({ articles, onSelect }) => {
                 <>
                   <div className="py-6 p-2 md:w-1/2 w-full h-1/2 md:h-full flex items-center order-1">
                     <div className="mx-auto text-center">
-                      <h1 className="sm:text-3xl text-2xl font-medium text-gray-900 mb-2">{article.title}</h1>
+                      <h1 className="sm:text-3xl text-2xl font-medium text-gray-900 mb-2">{truncateText(article.title, 7)}</h1>
                       <div className="w-full"><h2>{article.text}</h2></div>
                     </div>
                   </div>

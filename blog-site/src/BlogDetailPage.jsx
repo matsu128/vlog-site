@@ -11,9 +11,9 @@ const BlogDetailPage = () => {
 
   useEffect(() => {
     // sessionStorageから情報を取得
-    const imageUrl = sessionStorage.getItem('selectedPostImage');
-    const selectedTitle = sessionStorage.getItem('selectedPostTitle');
-    const selectedContent = sessionStorage.getItem('selectedPostContent');
+    const imageUrl = sessionStorage.getItem('image');
+    const selectedTitle = sessionStorage.getItem('title');
+    const selectedContent = sessionStorage.getItem('content');
     const selectedViewMode = sessionStorage.getItem('viewMode');
 
     setImage(imageUrl);
